@@ -1,0 +1,46 @@
+# Flutter/Dart specific
+*.iml
+*.metadata
+.dart_tool/
+.idea/
+.vscode/
+.flutter-plugins
+.flutter-plugins-dependencies
+.packages
+.pub/
+build/
+.dart_tool/
+flutter_assets/
+
+# Android specific
+build/app/intermediates/
+build/app/tmp/
+android/app/build/
+android/build/
+android/gradle/
+android/gradlew
+android/gradlew.bat
+android/local.properties
+
+# iOS specific
+ios/Pods/
+ios/Podfile.lock
+ios/Podfile.lock.md5
+ios/Pods/
+ios/Runner.xcworkspace/
+ios/.symlinks/
+ios/Flutter/Flutter.xcodeproj/
+ios/Flutter/Generated.xcconfig
+
+# Firebase configuration files
+android/app/google-services.json
+ios/Runner/GoogleService-Info.plist
+.env
+
+# Firebase SDK automatically creates these files
+.flutter-plugins
+.flutter-plugins-dependencies
+
+# Files created by Firebase CLI
+firebase-debug.log
+firebase.json

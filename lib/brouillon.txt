@@ -1,0 +1,279 @@
+               if (possibleuser != true) {  //  if (tentatives >= 0) {
+                                      try {
+                                        await FirebaseAuth.instance
+                                            .signInWithEmailAndPassword(
+                                                email: tempemail
+                                                    .trimLeft()
+                                                    .trimRight(),
+                                                password: _pass
+                                                    .trimLeft()
+                                                    .trimRight());
+                                        print(
+                                            '${_destcontroller.text},${_dest}');
+                                        Example_transaction new_transaction =
+                                            Example_transaction(
+                                                sender,
+                                                //'${code} ${_destcontroller.text}',
+                                                receivername,
+                                                montant,
+                                                DateTime.now(),
+                                                'sortant');
+                                        firestoreTransactions
+                                            .add(new_transaction.todoc())
+                                            .whenComplete(() {
+                                          firestoreInstance
+                                              .doc(instance.currentUser?.uid)
+                                              .update({
+                                            'balance': currentbalance -
+                                                (montant * (1 + taxe))
+                                          });
+
+                                          firestoreInstance.doc(p).update({
+                                            'balance': receiverbalance + montant
+                                          });
+
+                                          firestoreInstance
+                                              .doc(instance.currentUser?.uid)
+                                              .collection('notifications')
+                                              .add(Notifications(
+                                                      new_transaction,
+                                                      'Vous avez envoye ${new_transaction.montant} a ${new_transaction.receveur}')
+                                                  .tojson());
+
+                                          new_transaction.type = 'entrant';
+                                          firestoreInstance
+                                              .doc(p)
+                                              .collection('transactions')
+                                              .add(new_transaction.todoc());
+                                          firestoreInstance
+                                              .doc(p)
+                                              .collection('notifications')
+                                              .add(Notifications(
+                                                      new_transaction,
+                                                      'Vous avez recu ${new_transaction.montant} de ${new_transaction.destinataire}')
+                                                  .tojson());
+                                          firestoreInstance
+                                              .doc(p)
+                                              .get()
+                                              .then((value) {
+                                            SendNotification('transfert',
+                                                value.get('token'));
+                                          });
+
+                                          showDialog(
+                                              context: context,
+                                              builder: (BuildContext context) {
+                                                return AlertDialog(
+                                                    title: Text(
+                                                        'Transaction fait avec succes'),
+                                                    content: Container(
+                                                        child: Text(
+                                                            "Merci d'avoir utilise Litcash")));
+                                              });
+                                          _formkey1.currentState?.reset();
+                                          _formkey2.currentState?.reset();
+                                          _emailcontroller.clear();
+                                          _destcontroller.clear();
+                                          montant = 0;
+                                          tempemail = '';
+                                          _usr = '';
+                                          _dest = '';
+                                        }).onError((error, stackTrace) {
+                                          showDialog(
+                                              context: context,
+                                              builder: (BuildContext context) {
+                                                return AlertDialog(
+                                                    title: Text(
+                                                        "Transaction n ' a pas ete fait"),
+                                                    content: Container(
+                                                      child: Text('$error'),
+                                                    ));
+                                              });
+                                          return firestoreTransactions.doc('');
+                                        });
+                                      } on FirebaseException catch (e) {
+                                        showDialog(
+                                            context: context,
+                                            builder: (BuildContext context) {
+                                              return AlertDialog(
+                                                  title: Text("${e.code}"),
+                                                  content: Container(
+                                                    child: Text('${e.message}'),
+                                                  ));
+                                            });
+                                        print(e);
+                                        result = e.code;
+
+                                        /*
+                                      if (e.code.compareTo('wrong-password') ==
+                                          0) {
+                                        tentatives -= 1;
+                                        if (tentatives > 0)
+                                          showDialog(
+                                              context: context,
+                                              builder: (BuildContext context) {
+                                                if (moyenauthentif == 1) {
+                                                  return AlertDialog(
+                                                      title: Text(
+                                                          'mot de passe incorrect\nil vous reste $tentatives tentatives'),
+                                                      content: Container(
+                                                          child: Text('test')));
+                                                } else if (moyenauthentif ==
+                                                    2) {
+                                                  return AlertDialog(
+                                                      title: Text(
+                                                          'mot de passe incorrect\nil vous reste $tentatives tentatives'),
+                                                      content: Container(
+                                                          child: Text('test')));
+                                                }
+                                                return AlertDialog(
+                                                    title: Text(
+                                                        'desole une erreur s est produite'),
+                                                    content: Container(
+                                                        child: Text('test')));
+                                              });
+                                        /*   if (tentatives == 0) {
+                                            try {
+                                              blockedusers
+                                                  .doc(
+                                                      instance.currentUser?.uid)
+                                                  .set({'nom': 'nothing'}).then(
+                                                      (value) {
+                                                b = 0;
+                                              });
+                                            } catch (e) {
+                                              print(e);
+                                            }
+                                            showDialog(
+                                                context: context,
+                                                builder:
+                                                    (BuildContext context) {
+                                                  //tentatives -= 1;
+                                                  return AlertDialog(
+                                                      title: Text(
+                                                          'Votre compte a ete bloque car vous avez entre 3 mot de passe incorrects '));
+                                                });
+                                          } 
+                                          */
+                                      }
+                                    }
+                                    tentatives -= 1; 
+*/
+                                      }
+                                      }
+
+
+                                      else {
+                                      authentication()
+                                          .authenticate()
+                                          .then((value) async {
+                                        if (value) {
+                                          try {
+                                            print(
+                                                '${_destcontroller.text},${_dest}');
+                                            Example_transaction
+                                                new_transaction =
+                                                Example_transaction(
+                                                    sender,
+                                                    //'${code} ${_destcontroller.text}',
+                                                    receivername,
+                                                    montant,
+                                                    DateTime.now(),
+                                                    'sortant');
+                                            firestoreTransactions
+                                                .add(new_transaction.todoc())
+                                                .whenComplete(() {
+                                              firestoreInstance
+                                                  .doc(
+                                                      instance.currentUser?.uid)
+                                                  .update({
+                                                'balance': currentbalance -
+                                                    (montant * (1 + taxe))
+                                              });
+
+                                              firestoreInstance.doc(p).update({
+                                                'balance':
+                                                    receiverbalance + montant
+                                              });
+
+                                              firestoreInstance
+                                                  .doc(
+                                                      instance.currentUser?.uid)
+                                                  .collection('notifications')
+                                                  .add(Notifications(
+                                                          new_transaction,
+                                                          'Vous avez envoye ${new_transaction.montant} a ${new_transaction.receveur}')
+                                                      .tojson());
+
+                                              new_transaction.type = 'entrant';
+                                              firestoreInstance
+                                                  .doc(p)
+                                                  .collection('transactions')
+                                                  .add(new_transaction.todoc());
+                                              firestoreInstance
+                                                  .doc(p)
+                                                  .collection('notifications')
+                                                  .add(Notifications(
+                                                          new_transaction,
+                                                          'Vous avez recu ${new_transaction.montant} de ${new_transaction.destinataire}')
+                                                      .tojson());
+                                              firestoreInstance
+                                                  .doc(p)
+                                                  .get()
+                                                  .then((value) {
+                                                SendNotification('transfert',
+                                                    value.get('token'));
+                                              });
+
+                                              showDialog(
+                                                  context: context,
+                                                  builder:
+                                                      (BuildContext context) {
+                                                    return AlertDialog(
+                                                        title: Text(
+                                                            'Transaction fait avec succes'),
+                                                        content: Container(
+                                                            child: Text(
+                                                                "Merci d'avoir utilise Litcash")));
+                                                  });
+                                              _formkey1.currentState?.reset();
+                                              _formkey2.currentState?.reset();
+                                              _emailcontroller.clear();
+                                              _destcontroller.clear();
+                                              montant = 0;
+                                              tempemail = '';
+                                              _usr = '';
+                                              _dest = '';
+                                            }).onError((error, stackTrace) {
+                                              showDialog(
+                                                  context: context,
+                                                  builder:
+                                                      (BuildContext context) {
+                                                    return AlertDialog(
+                                                        title: Text(
+                                                            "Transaction n ' a pas ete fait"),
+                                                        content: Container(
+                                                          child: Text('$error'),
+                                                        ));
+                                                  });
+                                              return firestoreTransactions
+                                                  .doc('');
+                                            });
+                                          } on FirebaseException catch (e) {
+                                            showDialog(
+                                                context: context,
+                                                builder:
+                                                    (BuildContext context) {
+                                                  return AlertDialog(
+                                                      title: Text("${e.code}"),
+                                                      content: Container(
+                                                        child: Text(
+                                                            '${e.message}'),
+                                                      ));
+                                                });
+                                            print(e);
+                                            result = e.code;
+                                          }
+                                        }
+                                      });
+                                    }
